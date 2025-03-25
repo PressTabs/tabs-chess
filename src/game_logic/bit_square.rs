@@ -14,13 +14,13 @@ use super::piece_type::PieceType;
  * 
  * Needs to implement the From<SquareState> trait.
  */
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct BitSquare {
    pub data: u8,
 }
 
 impl BitSquare {
-    pub fn new(data: u8) -> Self {
+    pub const fn new(data: u8) -> Self {
         BitSquare { data }
     }
 

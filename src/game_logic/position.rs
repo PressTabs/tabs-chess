@@ -14,8 +14,27 @@ impl Position {
         self.rank < 8 && self.file < 8
     }
 
-    pub fn new(rank: u8, file: u8) -> Self {
+    pub const fn new(rank: u8, file: u8) -> Self {
         Position { rank, file }
+    }
+
+    //Bad code.
+    pub fn to_str(&self) -> String {
+        let rank = String::from(match self.rank {
+            0 => "a",
+            1 => "b",
+            2 => "c",
+            3 => "d",
+            4 => "e",
+            5 => "f",
+            6 => "g",
+            7 => "h",
+            _ => panic!(),
+        });
+
+        let file = (self.file + 1).to_string();
+
+        rank + &file
     }
 }
 

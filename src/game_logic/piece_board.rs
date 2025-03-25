@@ -11,7 +11,7 @@
  * Each piece will need to store it's position however, unlike in the BitBoard representation. 
  * A chessboard is 8x8. We thus need 3 bits (2^3 = 8) for both the rank and the file. That gives us 6 bits so far.
  * 
- * We'll use a seventh bit as a union for the KING_HAS_MOVED, ROOK_HAS_MOVED, and EN_PASSANT_ABLE (bits 4-6 in the BitSquare documentation) as these are mutually exclusive
+ * We'll use a seventh bit as a union for the KING_HAS_MOVED, ROOK_HAS_MOVED, and EN_PASSANT_ABLE (bits 4-6 in the BitSquare documentation) as these are mutually exclusive.
  * 
  * Finally, we'll use the eighth bit to mark if a piece has been removed from play (died).
  * 
@@ -50,10 +50,35 @@
  * our current convention of storing the CURRENT_TURN bit in the white queen (it would work equally well in the black queen) holds without need for modification.
  * 
  * Great, now we just need to implement it.
+ * 
+ * ADDENDUM CONVENTION:
+ * 
+ * To make sorting logic easier, faster, etc., all dead pieces MUST be notated with all bits set to 1, i.e. the byte value must be 255. This also makes it very easy to check for, and
+ * subsequently ignore dead pieces when rendering, performing game logic, and so on.
+ * 
+ * PROBLEM: THIS CANNOT HANDLE PROMOTION. I WILL NEED TO RESOLVE THIS.
+ * SOLUTION CANDIDATE: SET THE PAWN TO DEAD. Set the magic bit to off. This is against convention for dead pieces and should thus be recognizable.
+ *                     This will trigger a backtrace to figure out what a pawn has been promoted to. Alternatively engage a new packing convention.
+ * SOLUTION CANDIDATE: SET THE MAGIC BIT IN THE BLACK QUEEN. (FAIL)
+ * 
+ * PROBLEM: DEATH CONVENTION CONFLICTS WITH QUEEN BIT HACK
+ * SOLUTION: QUEENS ARE BY THEMSELVES. THE QUEEN BIT HACK WILL WORK.
+ * 
+ * PROBLEM: PROMOTION EXPANDS THE SIZE OF EACH PieceType + Color Section. We cannot support this
+ * SOLUTION: Either a. forgo this representation, or b. As soon as there is a promotion flip the Black Queen's magic bit (PROMOTION_REACHED) and dynamically switch our representation,
+ *           starting at that point in the tree, to the BitBoard representation.
  */
 
 use super::bit_piece::BitPiece;
 
+#[derive(Clone, Copy)]
  pub struct PieceBoard {
     pub data: [BitPiece; 32]
+ }
+
+ impl PieceBoard {
+    pub const fn new() -> Self {
+        let mut piece_board = [0u8; 32];
+        todo!()
+    }
  }
